@@ -1,16 +1,19 @@
 const express = require("express");
-const sequelize = require("./config/database");
-const userRoutes = require("./routes/userRoutes");
+const db = require("./config/sequelize-init");
+const { ArticulosNewsletter } = require("./models/newsletter");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
-app.use("/api", userRoutes);
 
-sequelize
+const newsletterRouter = require("./routes/newsletter.routes");
+app.use("/api", newsletterRouter);
+
+db.sequelize
   .sync()
-  .then(() => {
+  .then((result) => {
+    //console.log(result);
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
     });

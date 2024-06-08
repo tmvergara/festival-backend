@@ -1,8 +1,10 @@
 const express = require("express");
 const router = express.Router();
 
-const db = require("../base-orm/sequelize-init");
+const { Artistas } = require("../models/artistas");
 
-router.get("/api/artistas", async (req, res) => {
-    let data = await db.artistas.findAll()
-})
+router.get("/artistas", async (req, res) => {
+  let data = await Artistas.findAll();
+});
+
+module.exports = router;
