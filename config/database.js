@@ -26,21 +26,29 @@ async function crearSponsors() {
 }
 
 async function crearNewsletter() {
-  // Crear la tabla secundaria primero
-  console.log("-> Creando tabla: TipoArticulos");
-  await db.run(`CREATE TABLE TipoArticulo (
+  res = await db.get(
+    "SELECT count(*) as contar FROM sqlite_schema WHERE type = 'table' and name= 'TipoArticulos'",
+    []
+  );
+
+  if (res.contar > 0) existe = true;
+  if (!existe) {
+    // Crear la tabla secundaria primero
+    console.log("-> Creando tabla: TipoArticulos");
+    await db.run(`CREATE TABLE TipoArticulo (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     nombre VARCHAR(255),
     descripcion VARCHAR(255)
   );`);
-  console.log("* Tabla: TipoArticulos - Creada con éxito.");
-  console.log("Sembrando datos.");
-  await db.run(`INSERT INTO TipoArticulo (nombre, descripcion) VALUES
+    console.log("* Tabla: TipoArticulos - Creada con éxito.");
+    console.log("Sembrando datos.");
+    await db.run(`INSERT INTO TipoArticulo (nombre, descripcion) VALUES
     ('Noticias', 'Últimas noticias y actualizaciones del mundo de la música'),
     ('Novedades de Entradas', 'Información sobre nuevas entradas disponibles para festivales'),
     ('Sorteos', 'Participa y gana entradas y otros premios'),
     ('Promociones', 'Ofertas especiales y descuentos para eventos'),
     ('Artistas Destacados', 'Conoce a los artistas más destacados de los festivales');`);
+  }
 
   // Crear la tabla primaria
   console.log("-> Creando tabla: ArticulosNewsletter");
