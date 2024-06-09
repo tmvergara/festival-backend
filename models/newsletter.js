@@ -56,6 +56,11 @@ const ArticulosNewsletter = sequelize.define(
       type: DataTypes.DATE,
       allowNull: false,
     },
+    activo: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true,
+    },
   },
   {
     tableName: "ArticulosNewsletter",
