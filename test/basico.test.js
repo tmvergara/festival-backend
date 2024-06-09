@@ -20,7 +20,7 @@ describe("Ejemplo simple, test que no falla", () => {
 });
 
 describe("GET 404", () => {
-  it("Debería devolver error 404.", async () => {
+  it("Debería devolver error 404", async () => {
     const res = await request(app).get("/urlinexistente");
     expect(res.statusCode).toEqual(404);
   });
