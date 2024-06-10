@@ -22,7 +22,7 @@ async function crearArtistas() {
                 ('R&B'),
                 ('Hip-Hop'),
                 ('Electronic')
-                ;`); 
+                ;`);
   }
 
   res = await db.get(
@@ -43,20 +43,20 @@ async function crearArtistas() {
       );`
     );
     console.log("* Tabla: Artista - Creada con exito.");
-    
+
     console.log("Sembrando datos.");
     await db.run(
-      `INSERT INTO artista (nombre, fechaOrigen, oyentesMensuales, generoId, activo) VALUES
-      ('Foo Fighters', '1994-10-17', 23000000, 1, 1),
-      ('Måneskin', '2016-01-01', 22000000, 1, 1),
-      ('The Weeknd', '2010-01-01', 75000000, 3, 1),
-      ('Arctic Monkeys', '2002-01-01', 28000000, 1, 1),
-      ('Kendrick Lamar', '2004-01-01', 32000000, 4, 1),
-      ('Daft Punk', '1993-01-01', 18000000, 5, 1),
-      ('Taylor Swift', '2006-01-01', 82000000, 2, 1),
-      ('Calvin Harris', '2006-01-01', 35000000, 5, 1),
-      ('Radiohead', '1985-01-01', 20000000, 1, 1),
-      ('Billie Eilish', '2015-01-01', 45000000, 2, 1),`
+      `INSERT INTO Artista (nombre, fechaOrigen, oyentesMensuales, generoId, activo) VALUES
+  ('Foo Fighters', '1994-10-17', 23000000, 1, 1),
+  ('Måneskin', '2016-01-01', 22000000, 1, 1),
+  ('The Weeknd', '2010-01-01', 75000000, 3, 1),
+  ('Arctic Monkeys', '2002-01-01', 28000000, 1, 1),
+  ('Kendrick Lamar', '2004-01-01', 32000000, 4, 1),
+  ('Daft Punk', '1993-01-01', 18000000, 5, 1),
+  ('Taylor Swift', '2006-01-01', 82000000, 2, 1),
+  ('Calvin Harris', '2006-01-01', 35000000, 5, 1),
+  ('Radiohead', '1985-01-01', 20000000, 1, 1),
+  ('Billie Eilish', '2015-01-01', 45000000, 2, 1);`
     );
   }
 }
@@ -79,16 +79,16 @@ async function crearSponsors() {
 
 async function crearNewsletter() {
   res = await db.get(
-    "SELECT count(*) as contar FROM sqlite_schema WHERE type = 'table' and name= 'TipoArticulos'",
+    "SELECT count(*) as contar FROM sqlite_schema WHERE type = 'table' and name= 'TipoArticulo'",
     []
   );
 
   let existe = false;
-
+  console.log(res.contar);
   if (res.contar > 0) existe = true;
   if (!existe) {
     // Crear la tabla secundaria primero
-    console.log("-> Creando tabla: TipoArticulos");
+    console.log("-> Creando tabla: TipoArticulo");
     await db.run(`CREATE TABLE TipoArticulo (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     nombre VARCHAR(255),
