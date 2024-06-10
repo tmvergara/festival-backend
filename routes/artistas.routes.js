@@ -93,7 +93,7 @@ router.put("/artistas/:id", async (req, res) => {
     if (error.name === "SequelizeForeignKeyConstraintError") {
       res.status(400).json({
         error:
-          "Error de clave foránea. Verifica que el tipoArticulo_id sea válido.",
+          "Error de clave foránea. Verifica que el generoId sea válido.",
       });
     } else {
       res
@@ -108,7 +108,7 @@ router.delete("/artistas/:id", async(req, res) => {
   try {
     const [ affectedRows ] = await Artista.update(
       { activo: sequelize.literal("CASE WHEN activo = 1 THEN 0 ELSE 1 END")},
-      { where: {id: +req.params.id}}
+      { where: {idArtista: +req.params.id}}
     );
     if (affectedRows === 0) {
       return res.status(400).send({

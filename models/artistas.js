@@ -59,7 +59,11 @@ const Artista = sequelize.define("Artista", {
     type: DataTypes.BOOLEAN,
     allowNull: false,
     defaultValue: true
-  }
+  },
+},
+{
+  tableName: "Artista",
+  timestamps: false,
 });
 
 const Genero = sequelize.define("Genero", {
@@ -71,7 +75,11 @@ const Genero = sequelize.define("Genero", {
   nombre: {
     type: DataTypes.STRING,
     allowNull: false
-  }
+  },
+},
+{
+  tableName: "Genero",
+  timestamps: false,
 });
 
 module.exports = {
