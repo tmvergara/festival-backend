@@ -2,11 +2,63 @@ const db = require("aa-sqlite");
 require("dotenv").config();
 
 async function crearArtistas() {
-  console.log("-> Creando tabla: ");
-  await db.run("ACA LA CONSULTA SQL");
-  console.log("* Tabla: NOMBRE TABLA - Creada con exito.");
-  console.log("Sembrando datos.");
-  await db.run("ACA LA CONSULTA PARA INSERTAR DATOS");
+  let existe = false;
+  let res = null;
+
+  res = await db.get(
+    "SELECT count(*) as contar FROM sqlite_schema WHERE type = 'table' and name= 'Genero'",
+    []
+  );
+  if (res.contar > 0) existe = true;
+  if (!existe) {
+    await db.run(
+      "CREATE table Genero( id INTEGER PRIMARY KEY AUTOINCREMENT, nombre VARCHAR(60));"
+    );
+    console.log("* Tabla: Género - Creada con exito.");
+    console.log("Sembrando datos.");
+    await db.run(`INSERT INTO Genero (nombre) VALUES
+                ('Rock'),
+                ('Pop'),
+                ('R&B'),
+                ('Hip-Hop'),
+                ('Electronic')
+                ;`); 
+  }
+
+  res = await db.get(
+    "SELECT count(*) as contar FROM sqlite_schema WHERE type = 'table' and name = 'Artista'",
+    []
+  );
+  if (res.contar > 0) existe = true;
+  if (!existe) {
+    await db.run(
+      `CREATE table Artista( 
+      idArtista INTEGER PRIMARY KEY AUTOINCREMENT, 
+      nombre VARCHAR(60),
+      fechaOrigen DATE,
+      oyentesMensuales INTEGER,
+      generoId INTEGER,
+      activo BOOLEAN DEFAULT 1,
+      FOREIGN KEY (generoId) REFERENCES Genero(id)
+      );`
+    );
+    console.log("* Tabla: Artista - Creada con exito.");
+    
+    console.log("Sembrando datos.");
+    await db.run(
+      `INSERT INTO artista (nombre, fechaOrigen, oyentesMensuales, generoId, activo) VALUES
+      ('Foo Fighters', '1994-10-17', 23000000, 1, 1),
+      ('Måneskin', '2016-01-01', 22000000, 1, 1),
+      ('The Weeknd', '2010-01-01', 75000000, 3, 1),
+      ('Arctic Monkeys', '2002-01-01', 28000000, 1, 1),
+      ('Kendrick Lamar', '2004-01-01', 32000000, 4, 1),
+      ('Daft Punk', '1993-01-01', 18000000, 5, 1),
+      ('Taylor Swift', '2006-01-01', 82000000, 2, 1),
+      ('Calvin Harris', '2006-01-01', 35000000, 5, 1),
+      ('Radiohead', '1985-01-01', 20000000, 1, 1),
+      ('Billie Eilish', '2015-01-01', 45000000, 2, 1),`
+    );
+  }
 }
 
 async function crearStands() {
@@ -97,6 +149,15 @@ async function CrearBaseSiNoExiste() {
   if (res.contar > 0) existe = true;
   if (!existe) {
     crearNewsletter();
+  }
+  res = await db.get(
+    "SELECT count(*) as contar FROM sqlite_schema WHERE type = 'table' and name= 'Artista'",
+    []
+  );
+
+  if (res.contar > 0) existe = true;
+  if (!existe) {
+    crearArtistas();
   }
 
   // cerrar la base

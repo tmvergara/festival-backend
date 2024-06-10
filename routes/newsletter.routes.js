@@ -29,18 +29,6 @@ router.get("/articulos-newsletter", async (req, res) => {
   }
 });
 
-router.get("/articulos-newsletter", async (req, res) => {
-  try {
-    const data = await ArticulosNewsletter.findAll();
-    res.status(200).send(data);
-  } catch (error) {
-    res.status(500).send({
-      error: "Error al buscar en la BD.",
-      msg: error,
-    });
-  }
-});
-
 router.get("/articulos-newsletter/:id", async (req, res) => {
   const id = req.params.id;
   try {

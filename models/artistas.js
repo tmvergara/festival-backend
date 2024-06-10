@@ -1,7 +1,7 @@
 const { sequelize } = require("../config/sequelize-init");
 const { DataTypes } = require("sequelize");
 
-const Artistas = sequelize.define("Artistas", {
+const Artista = sequelize.define("Artista", {
   idArtista: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -55,11 +55,27 @@ const Artistas = sequelize.define("Artistas", {
       },
     },
   },
+  activo: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: true
+  }
+});
+
+const Genero = sequelize.define("Genero", {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true
+  },
+  nombre: {
+    type: DataTypes.STRING,
+    allowNull: false
+  }
 });
 
 module.exports = {
-  sequelize,
-  artistas,
+  Artista,
+  Genero,
 };
 
-module.exports = Artistas;
