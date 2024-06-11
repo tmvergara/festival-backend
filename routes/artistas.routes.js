@@ -4,7 +4,7 @@ const router = express.Router();
 const { Artista, Genero } = require("../models/artistas");
 const { sequelize } = require("../config/sequelize-init");
 
-router.get("/generos", async (req, res) => {
+router.get("/artistas/generos", async (req, res) => {
   try {
     const data = await Genero.findAll();
     res.status(200).send(data);
