@@ -10,6 +10,8 @@ const newsletterRouter = require("./routes/newsletter.routes");
 app.use("/api", newsletterRouter);
 const artistasRouter = require("./routes/artistas.routes")
 app.use("/api", artistasRouter)
+const standsRouter = require("./routes/stands.routes")
+app.use("/api", standsRouter)
 
 // Sincronización de la base de datos
 db.sequelize.sync().catch((err) => {
