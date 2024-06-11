@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { Sponsor, Rubro } = require("../models/sponsor");
+const { Sponsor, Rubro } = require("../models/sponsors");
 const { sequelize } = require("../config/sequelize-init");
 
 router.get("/rubros", async (req, res) => {

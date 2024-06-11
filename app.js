@@ -12,6 +12,8 @@ const artistasRouter = require("./routes/artistas.routes")
 app.use("/api", artistasRouter)
 const standsRouter = require("./routes/stands.routes")
 app.use("/api", standsRouter)
+const sponsorsRouter = require("./routes/sponsors.routes")
+app.use("/api", sponsorsRouter)
 
 // Sincronización de la base de datos
 db.sequelize.sync().catch((err) => {

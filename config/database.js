@@ -219,6 +219,16 @@ async function CrearBaseSiNoExiste() {
     await crearArtistas();
   }
 
+  res = await db.get(
+    "SELECT count(*) as contar FROM sqlite_schema WHERE type = 'table' and name= 'Sponsor'",
+    []
+  );
+
+  if (res.contar > 0) existe = true;
+  if (!existe) {
+    await crearSponsors();
+  }
+
   // cerrar la base
   await db.close();
 }
