@@ -62,30 +62,13 @@ async function crearArtistas() {
   }
 }
 
-async function crearStands() {
-  console.log("-> Creando tabla: ");
-  await db.run("ACA LA CONSULTA SQL");
-  console.log("* Tabla: NOMBRE TABLA - Creada con exito.");
-  console.log("Sembrando datos.");
-  await db.run("ACA LA CONSULTA PARA INSERTAR DATOS");
-}
-
-async function crearSponsors() {
-  console.log("-> Creando tabla: ");
-  await db.run("ACA LA CONSULTA SQL");
-  console.log("* Tabla: NOMBRE TABLA - Creada con exito.");
-  console.log("Sembrando datos.");
-  await db.run("ACA LA CONSULTA PARA INSERTAR DATOS");
-}
-
 async function crearNewsletter() {
-  res = await db.get(
+  let res = await db.get(
     "SELECT count(*) as contar FROM sqlite_schema WHERE type = 'table' and name= 'TipoArticulo'",
     []
   );
 
   let existe = false;
-  console.log(res.contar);
   if (res.contar > 0) existe = true;
   if (!existe) {
     // Crear la tabla secundaria primero
@@ -95,7 +78,7 @@ async function crearNewsletter() {
     nombre VARCHAR(255),
     descripcion VARCHAR(255)
   );`);
-    console.log("* Tabla: TipoArticulos - Creada con éxito.");
+    console.log("* Tabla: TipoArticulo - Creada con éxito.");
     console.log("Sembrando datos.");
     await db.run(`INSERT INTO TipoArticulo (nombre, descripcion) VALUES
     ('Noticias', 'Últimas noticias y actualizaciones del mundo de la música'),
@@ -105,9 +88,17 @@ async function crearNewsletter() {
     ('Artistas Destacados', 'Conoce a los artistas más destacados de los festivales');`);
   }
 
-  // Crear la tabla primaria
-  console.log("-> Creando tabla: ArticulosNewsletter");
-  await db.run(`CREATE TABLE ArticulosNewsletter (
+  res = await db.get(
+    "SELECT count(*) as contar FROM sqlite_schema WHERE type = 'table' and name= 'ArticulosNewsletter'",
+    []
+  );
+
+  existe = false;
+  if (res.contar > 0) existe = true;
+  if (!existe) {
+    // Crear la tabla primaria
+    console.log("-> Creando tabla: ArticulosNewsletter");
+    await db.run(`CREATE TABLE ArticulosNewsletter (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     titulo VARCHAR(255),
     tipoArticulo_id INTEGER,
@@ -117,9 +108,9 @@ async function crearNewsletter() {
     activo BOOLEAN DEFAULT 1,
     FOREIGN KEY (tipoArticulo_id) REFERENCES TipoArticulo(id)
   );`);
-  console.log("* Tabla: ArticulosNewsletter - Creada con éxito.");
-  console.log("Sembrando datos.");
-  await db.run(`INSERT INTO ArticulosNewsletter (titulo, tipoArticulo_id, contenido, tiempoLectura, fechaPublicacion, activo) VALUES
+    console.log("* Tabla: ArticulosNewsletter - Creada con éxito.");
+    console.log("Sembrando datos.");
+    await db.run(`INSERT INTO ArticulosNewsletter (titulo, tipoArticulo_id, contenido, tiempoLectura, fechaPublicacion, activo) VALUES
     ('Festival de Primavera: Nuevas Confirmaciones', 1, '<h1>Festival de Primavera</h1><p>¡Grandes noticias! Se han confirmado nuevas bandas para el Festival de Primavera. No te lo pierdas.</p><ul><li>Banda 1</li><li>Banda 2</li><li>Banda 3</li></ul><p>Este año, el festival contará con más actividades y sorpresas para todos los asistentes. No olvides revisar el horario completo en nuestra página web.</p>', 5, '2024-06-01', 1),
     ('Entradas Early Bird para el Festival de Verano', 2, '<h1>Entradas Early Bird</h1><p>Consigue tus entradas Early Bird para el Festival de Verano a un precio especial. Oferta válida hasta fin de mes.</p><p>Beneficios de las entradas Early Bird:</p><ul><li>Descuento exclusivo</li><li>Acceso prioritario</li><li>Merchandising de regalo</li></ul><img src="https://via.placeholder.com/300x200?text=Entradas+Early+Bird" class="ml-auto mr-auto" alt="Entradas Early Bird">', 4, '2024-06-02', 1),
     ('Sorteo: Gana Entradas VIP', 3, '<h1>Gana Entradas VIP</h1><p>Participa en nuestro sorteo y gana entradas VIP para el Festival de Otoño. ¡No te lo pierdas!</p><ol><li>Regístrate en nuestra página web.</li><li>Comparte el evento en tus redes sociales.</li><li>Etiqueta a 3 amigos.</li></ol><img src="https://via.placeholder.com/300x200?text=Sorteo+VIP" class="ml-auto mr-auto" alt="Sorteo VIP">', 3, '2024-06-03', 1),
@@ -132,6 +123,7 @@ async function crearNewsletter() {
     ('Artista Destacado: The Rockers', 5, '<h1>The Rockers</h1><p>Conoce a The Rockers, la banda destacada de esta semana. Descubre más sobre su historia y música.</p><p>Álbumes más populares:</p><ol><li>Álbum 1</li><li>Álbum 2</li><li>Álbum 3</li></ol><img src="https://via.placeholder.com/300x200?text=The+Rockers" class="ml-auto mr-auto" alt="The Rockers">', 6, '2024-06-10', 1),
     ('Nuevos Patrocinadores para el Festival de Música Electrónica', 1, '<h1>Patrocinadores</h1><p>Estamos emocionados de anunciar nuevos patrocinadores para el Festival de Música Electrónica. Descubre quiénes son.</p><p>Patrocinadores:</p><ul><li>Empresa 1</li><li>Empresa 2</li><li>Empresa 3</li></ul>', 4, '2024-06-11', 1);
 `);
+  }
 }
 
 async function CrearBaseSiNoExiste() {
@@ -146,9 +138,7 @@ async function CrearBaseSiNoExiste() {
   let existe = false;
   let res = null;
 
-  // Arreglar con nuestra estructura
-  // El siguiente pedazo se repite 4 veces para cada una de las tablas principales, se verifica si existe la tabla y sino se la crea
-  // y se la siembre
+  // Verificar y crear tablas
   res = await db.get(
     "SELECT count(*) as contar FROM sqlite_schema WHERE type = 'table' and name= 'ArticulosNewsletter'",
     []
