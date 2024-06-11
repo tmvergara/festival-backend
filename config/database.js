@@ -1,4 +1,5 @@
 const db = require("aa-sqlite");
+const fs = require("fs");
 require("dotenv").config();
 
 async function crearArtistas() {
@@ -134,6 +135,11 @@ async function crearNewsletter() {
 }
 
 async function CrearBaseSiNoExiste() {
+  // Verificar si la carpeta .data existe, si no, crearla
+  if (!fs.existsSync("./.data")) {
+    fs.mkdirSync("./.data");
+  }
+
   // abrir base, si no existe el archivo/base lo crea
   await db.open("./.data/festival.db");
 
@@ -150,7 +156,7 @@ async function CrearBaseSiNoExiste() {
 
   if (res.contar > 0) existe = true;
   if (!existe) {
-    crearNewsletter();
+    await crearNewsletter();
   }
   res = await db.get(
     "SELECT count(*) as contar FROM sqlite_schema WHERE type = 'table' and name= 'Artista'",
@@ -159,11 +165,11 @@ async function CrearBaseSiNoExiste() {
 
   if (res.contar > 0) existe = true;
   if (!existe) {
-    crearArtistas();
+    await crearArtistas();
   }
 
   // cerrar la base
-  //   db.close();
+  await db.close();
 }
 
 CrearBaseSiNoExiste();
