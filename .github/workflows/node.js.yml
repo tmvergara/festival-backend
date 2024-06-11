@@ -17,6 +17,7 @@ jobs:
     strategy:
       matrix:
         node-version: [21.x]
+        test: [basico, newsletter, artistas] # Lista de tests
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
@@ -27,4 +28,5 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm install
-    - run: npm run test basico
+    - name: Run test ${{ matrix.test }}
+      run: npm run test ${{ matrix.test }}
