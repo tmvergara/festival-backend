@@ -126,6 +126,67 @@ async function crearNewsletter() {
   }
 }
 
+async function crearSponsors() {
+  let existe = false;
+  let res = null;
+
+  // Creación de la tabla Rubro
+  res = await db.get(
+    "SELECT count(*) as contar FROM sqlite_schema WHERE type = 'table' and name= 'Rubro'",
+    []
+  );
+  if (res.contar > 0) existe = true;
+  if (!existe) {
+    await db.run(
+      "CREATE table Rubro( id INTEGER PRIMARY KEY AUTOINCREMENT, nombre VARCHAR(100));"
+    );
+    console.log("* Tabla: Rubro - Creada con éxito.");
+    console.log("Sembrando datos.");
+    await db.run(`INSERT INTO Rubro (nombre) VALUES
+                ('Tecnología'),
+                ('Automotriz'),
+                ('Banca'),
+                ('Alimentos'),
+                ('Moda')
+                ;`);
+  }
+
+  // Creación de la tabla Sponsor
+  res = await db.get(
+    "SELECT count(*) as contar FROM sqlite_schema WHERE type = 'table' and name = 'Sponsor'",
+    []
+  );
+  if (res.contar > 0) existe = true;
+  if (!existe) {
+    await db.run(
+      `CREATE table Sponsor( 
+      idSponsor INTEGER PRIMARY KEY AUTOINCREMENT, 
+      nombre VARCHAR(100),
+      idRubro INTEGER,
+      presupuestoContribuido INTEGER,
+      fechaContrato DATE,
+      activo BOOLEAN DEFAULT 1,
+      FOREIGN KEY (idRubro) REFERENCES Rubro(id)
+      );`
+    );
+    console.log("* Tabla: Sponsor - Creada con éxito.");
+    console.log("Sembrando datos.");
+    await db.run(
+      `INSERT INTO Sponsor (nombre, idRubro, presupuestoContribuido, fechaContrato, activo) VALUES
+  ('Google', 1, 500000, '2022-01-01', 1),
+  ('Toyota', 2, 750000, '2021-06-15', 1),
+  ('Banco Santander', 3, 300000, '2023-03-20', 1),
+  ('Nestlé', 4, 450000, '2022-09-10', 1),
+  ('Nike', 5, 600000, '2021-11-25', 1),
+  ('Microsoft', 1, 700000, '2023-05-05', 1),
+  ('Ford', 2, 650000, '2022-07-18', 1),
+  ('BBVA', 3, 400000, '2023-02-14', 1),
+  ('Coca-Cola', 4, 550000, '2021-08-30', 1),
+  ('Adidas', 5, 500000, '2022-12-01', 1);`
+    );
+  }
+}
+
 async function CrearBaseSiNoExiste() {
   // Verificar si la carpeta .data existe, si no, crearla
   if (!fs.existsSync("./.data")) {
