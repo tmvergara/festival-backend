@@ -139,6 +139,47 @@ async function crearSponsors() {
   );
 }
 
+async function crearStands() {
+  await crearTabla(
+    "TipologiaStand",
+    `CREATE table TipologiaStand(
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      nombre VARCHAR(100),
+      precioXMC FLOAT
+    );`,
+    `INSERT INTO TipologiaStand (nombre, precioXMC) VALUES
+      ('VIP', 500.0),
+      ('Premium', 300.0),
+      ('General', 100.0);`
+  );
+
+  await crearTabla(
+    "Stand",
+    `CREATE table Stand(
+      id INTEGER PRIMARY KEY AUTOINCREMENT, 
+      nombre VARCHAR(60),
+      tipologiaStand_id INTEGER,
+      largo FLOAT,
+      ancho FLOAT,
+      descripcion TEXT,
+      fechaInstalacion DATE,
+      activo BOOLEAN DEFAULT 1,
+      FOREIGN KEY (tipologiaStand_id) REFERENCES TipologiaStand(id)
+    );`,
+    `INSERT INTO Stand (nombre, tipologiaStand_id, largo, ancho, descripcion, fechaInstalacion, activo) VALUES
+      ('Stand Google', 1, 12.0, 12.0, 'Stand VIP de Google con experiencias tecnológicas avanzadas', '2024-06-11', 1),
+      ('Stand Toyota', 2, 10.0, 10.0, 'Stand Premium de Toyota con exhibición de vehículos híbridos', '2024-06-12', 1),
+      ('Stand Santander', 3, 8.0, 8.0, 'Stand General de Santander con asesoría financiera gratuita', '2024-06-13', 1),
+      ('Stand Nestle', 1, 15.0, 15.0, 'Stand VIP de Nestle con degustaciones gourmet', '2024-06-14', 1),
+      ('Stand Nike', 2, 12.0, 12.0, 'Stand Premium de Nike con sesiones de entrenamiento en vivo', '2024-06-15', 1),
+      ('Stand Microsoft', 3, 10.0, 10.0, 'Stand General de Microsoft con demos de software', '2024-06-16', 1),
+      ('Stand Ford', 1, 20.0, 20.0, 'Stand VIP de Ford con pruebas de manejo exclusivas', '2024-06-17', 1),
+      ('Stand BBVA', 2, 15.0, 15.0, 'Stand Premium de BBVA con consultas financieras personalizadas', '2024-06-18', 1),
+      ('Stand Coca-Cola', 3, 12.0, 12.0, 'Stand General de Coca-Cola con promociones y regalos', '2024-06-19', 1),
+      ('Stand Adidas', 1, 18.0, 18.0, 'Stand VIP de Adidas con lanzamientos de productos exclusivos', '2024-06-20', 1);`
+  );
+}
+
 async function CrearBaseSiNoExiste() {
   if (!fs.existsSync("./.data")) {
     fs.mkdirSync("./.data");
@@ -149,6 +190,7 @@ async function CrearBaseSiNoExiste() {
   await crearNewsletter();
   await crearArtistas();
   await crearSponsors();
+  await crearStands();
 
   await db.close();
 }

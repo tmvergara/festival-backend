@@ -17,9 +17,6 @@ const TipologiaStand = sequelize.define("TipologiaStand", {
             },
         },
     },
-    descripcion: {
-        type: DataTypes.TEXT,
-    },
     precioXMC: {
         type: DataTypes.FLOAT,
         allowNull: false,
@@ -30,7 +27,11 @@ const TipologiaStand = sequelize.define("TipologiaStand", {
             },
         },
     },
-}
+},
+    {
+        tableName: "TipologiaStand",
+        timestamps: false,
+    }
 );
 
 const Stand = sequelize.define("Stand", {
@@ -107,7 +108,12 @@ const Stand = sequelize.define("Stand", {
             },
         },
     }
-})
+},
+    {
+        tableName: "Stand",
+        timestamps: false,
+    }
+)
 
 TipologiaStand.hasMany(Stand, {
     foreignKey: "tipologiaStand_id",

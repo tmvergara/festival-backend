@@ -1,3 +1,4 @@
+// tests/stands.test.js
 const request = require("supertest");
 const app = require("../app");
 const { Stand, TipologiaStand } = require("../models/stands");
@@ -17,121 +18,124 @@ afterAll(async () => {
     await sequelize.close(); // Cierra la conexión a la base de datos
 });
 
-describe('API Stands Routes', () => {
-    // GET /stands/tipologia
-    it('Should get all TipologiaStand', async () => {
-        // crear una tipología de stand de prueba
-        await TipologiaStand.create({ nombre: 'Tipologia1', precioXMC: 100.0 });
-        const response = await request(app).get("/stands/tipologia");
+describe("API Stands Routes", () => {
+    // GET /api/stands/tipologia
+    it("should get all tipologias", async () => {
+        await TipologiaStand.create({ nombre: "VIP", precioXMC: 100 }); // Crea un tipo de stand de prueba
+        const response = await request(app).get("/api/stands/tipologia");
         expect(response.status).toBe(200);
         expect(response.body.length).toBe(1);
-        expect(response.body[0].nombre).toBe('Tipologia1');
+        expect(response.body[0].nombre).toBe("VIP");
     });
 
-    // GET /stands
+    // GET /api/stands
     it("should get all stands", async () => {
         const tipologia = await TipologiaStand.create({
-            nombre: "Tipologia2",
-            precioXMC: 200.0,
-        });
+            nombre: "Premium",
+            precioXMC: 200,
+        }); // Crear TipologiaStand primero
         await Stand.create({
             nombre: "Stand1",
             tipologiaStand_id: tipologia.id,
-            largo: 5.0,
-            ancho: 5.0,
+            largo: 10,
+            ancho: 10,
+            descripcion: "Stand description",
             fechaInstalacion: new Date(),
             activo: true,
         });
-        const response = await request(app).get("/stands");
+        const response = await request(app).get("/api/stands");
         expect(response.status).toBe(200);
         expect(response.body.length).toBe(1);
         expect(response.body[0].nombre).toBe("Stand1");
     });
 
-    // GET /stands/:id
+    // GET /api/stands/:id
     it("should get a stand by ID", async () => {
         const tipologia = await TipologiaStand.create({
-            nombre: "Tipologia3",
-            precioXMC: 300.0,
+            nombre: "General",
+            precioXMC: 50,
         });
         const stand = await Stand.create({
             nombre: "Stand2",
             tipologiaStand_id: tipologia.id,
-            largo: 6.0,
-            ancho: 6.0,
+            largo: 12,
+            ancho: 12,
+            descripcion: "Stand description",
             fechaInstalacion: new Date(),
             activo: true,
         });
-        const response = await request(app).get(`/stands/${stand.id}`);
+        const response = await request(app).get(`/api/stands/${stand.id}`);
         expect(response.status).toBe(200);
         expect(response.body.nombre).toBe("Stand2");
     });
 
-    // POST /stands
+    // POST /api/stands
     it("should create a new stand", async () => {
         const tipologia = await TipologiaStand.create({
-            nombre: "Tipologia4",
-            precioXMC: 400.0,
+            nombre: "Exclusive",
+            precioXMC: 300,
         });
         const newStand = {
             nombre: "Stand3",
             tipologiaStand_id: tipologia.id,
-            largo: 7.0,
-            ancho: 7.0,
+            largo: 15,
+            ancho: 15,
+            descripcion: "New stand description",
             fechaInstalacion: new Date(),
             activo: true,
         };
-        const response = await request(app)
-            .post("/stands")
-            .send(newStand);
+        const response = await request(app).post("/api/stands").send(newStand);
         expect(response.status).toBe(200);
         expect(response.body.nombre).toBe("Stand3");
     });
 
-    // PUT /stands/:id
+    // PUT /api/stands/:id
     it("should update a stand by ID", async () => {
         const tipologia = await TipologiaStand.create({
-            nombre: "Tipologia5",
-            precioXMC: 500.0,
+            nombre: "Standard",
+            precioXMC: 150,
         });
         const stand = await Stand.create({
             nombre: "Stand4",
             tipologiaStand_id: tipologia.id,
-            largo: 8.0,
-            ancho: 8.0,
+            largo: 20,
+            ancho: 20,
+            descripcion: "Stand description",
             fechaInstalacion: new Date(),
             activo: true,
         });
         const updatedStand = {
             nombre: "UpdatedStand4",
             tipologiaStand_id: tipologia.id,
-            largo: 9.0,
-            ancho: 9.0,
+            largo: 22,
+            ancho: 22,
+            descripcion: "Updated description",
             fechaInstalacion: new Date(),
             activo: true,
         };
         const response = await request(app)
-            .put(`/stands/${stand.id}`)
+            .put(`/api/stands/${stand.id}`)
             .send(updatedStand);
         expect(response.status).toBe(200);
         expect(response.body.nombre).toBe("UpdatedStand4");
     });
 
-    // DELETE /stands/:id
+    // DELETE /api/stands/:id
     it("should toggle the active state of a stand by ID", async () => {
         const tipologia = await TipologiaStand.create({
-            nombre: "Tipologia6",
-            precioXMC: 600.0,
+            nombre: "Basic",
+            precioXMC: 80,
         });
         const stand = await Stand.create({
             nombre: "Stand5",
             tipologiaStand_id: tipologia.id,
-            largo: 10.0,
-            ancho: 10.0,
+            largo: 25,
+            ancho: 25,
+            descripcion: "Stand description",
             fechaInstalacion: new Date(),
             activo: true,
         });
-        const response = await request(app).delete(`/stands/${stand.id}`);
+        const response = await request(app).delete(`/api/stands/${stand.id}`);
         expect(response.status).toBe(200);
 
         const updatedStand = await Stand.findByPk(stand.id);
